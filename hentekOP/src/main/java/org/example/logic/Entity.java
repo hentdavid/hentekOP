@@ -7,11 +7,9 @@ import java.awt.*;
 import java.util.Random;
 
 public class Entity extends Coordinates {
-
     protected int width;
     protected int height;
     public ImageLoader loader;
-
     Random random;
 
     public Entity(int x, int y,int width, int height) {
@@ -36,7 +34,7 @@ public class Entity extends Coordinates {
         this.height = height;
     }
 
-    public Rectangle getRect(){
+    public Rectangle getRect() {
         return new Rectangle(x,y,width,height);
     }
 }

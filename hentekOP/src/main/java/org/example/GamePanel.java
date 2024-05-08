@@ -3,15 +3,15 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable {
     GameLogic logic;
     GameGraphics graphics;
-    int winWidth = 1024;
-    int winHeight = 768;
+    int width = 1024;
+    int height = 768;
 
     GamePanel() {
-        setPreferredSize(new Dimension(winWidth, winHeight));
-        logic = new GameLogic(winWidth, winHeight);
+        setPreferredSize(new Dimension(width, height));
+        logic = new GameLogic(width, height);
         graphics = new GameGraphics(logic);
         Thread thread = new Thread(this);
         thread.start();
@@ -24,12 +24,13 @@ public class GamePanel extends JPanel implements Runnable{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         graphics.draw(g);
-
+        g.setColor(Color.BLACK);
+        g.drawString("score: " + logic.getPlayer().getScore(), getWidth() - 100, 30);
     }
 
     @Override
     public void run() {
-        while(true){
+        while(true) {
             logic.update();
             repaint();
             try {

@@ -2,7 +2,7 @@ package org.example.logic;
 
 import java.awt.*;
 
-public class CarTrunk extends Coordinates{
+public class CarTrunk extends Coordinates {
     private Color color;
     private boolean active;
 
@@ -10,7 +10,7 @@ public class CarTrunk extends Coordinates{
         super(x,y);
         this.active = true;
     }
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
 
     }
     public Color getColor() {

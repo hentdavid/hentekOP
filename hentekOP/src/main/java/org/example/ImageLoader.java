@@ -16,7 +16,7 @@ public class ImageLoader {
             throw new RuntimeException(e);
         }
     }
-    public BufferedImage getImage(){
+    public BufferedImage getImage() {
         return image;
     }
 }

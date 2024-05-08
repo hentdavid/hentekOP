@@ -1,8 +1,5 @@
 package org.example.logic;
 
-import org.example.ImageLoader;
-
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -10,31 +7,33 @@ public class Player extends Entity implements KeyListener {
     boolean LEFT;
     boolean RIGHT;
     boolean isCarrying;
+    boolean isStunned;
+    private int score;
+
     public Player(int x, int y, int width, int height) {
         super(x, y, width, height);
+        score = 0;
     }
-    public void draw(Graphics g){
-        if(isCarrying){
-            loader = new ImageLoader("Hentek - WAREHOUSEMANWITHBOX.png");
-        }else{
-            loader = new ImageLoader("Hentek - WAREHOUSEMAN.png");
-        }
-        g.drawImage(loader.getImage(), x, y, width, height, null);
+
+    public void setStunned(boolean stunned) {
+        this.isStunned = stunned;
     }
 
     public void move() {
-        System.out.println(x);
-        if (LEFT) {
-            x -= 3;
-        }
-        if (RIGHT) {
-            x += 3;
-        }
-        if(x <= 200){
-            x = 200;
-        }
-        if(x >= 720){
-            x = 720;
+        //System.out.println(x);
+        if (!isStunned) {
+            if (LEFT) {
+                x -= 3;
+            }
+            if (RIGHT) {
+                x += 3;
+            }
+            if (x <= 200) {
+                x = 200;
+            }
+            if (x >= 720) {
+                x = 720;
+            }
         }
     }
 
@@ -70,5 +69,12 @@ public class Player extends Entity implements KeyListener {
 
     public void setCarrying(boolean carrying) {
         isCarrying = carrying;
+    }
+
+    public void Score() {
+        score++;
+    }
+    public int getScore() {
+        return score;
     }
 }

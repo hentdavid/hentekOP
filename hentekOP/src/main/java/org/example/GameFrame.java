@@ -9,7 +9,7 @@ public class GameFrame extends JFrame {
     public GameFrame() throws HeadlessException {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Game");
+        setTitle("WAREHOUSE");
         panel = new GamePanel();
         add(panel);
         pack();
