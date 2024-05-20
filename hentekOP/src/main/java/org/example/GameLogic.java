@@ -8,15 +8,15 @@ import java.util.TimerTask;
 
 public class GameLogic {
     Player player;
-    public int width;
-    public int height;
+    public final int width;
+    public final int height;
     private ArrayList<Box> boxes;
     private ArrayList<Box> boxesToRemove;
     private ArrayList<Tire> tires;
-    private ArrayList<Drink> drinks;
+    private final ArrayList<Drink> drinks;
     boolean canCarry;
     int boxSpawnTimer = 100;
-    int boxSpawnInterval = 100;
+    int boxSpawnInterval = 180;
     private boolean tireAdded = false;
 
     public GameLogic(int width, int height) {
@@ -24,18 +24,21 @@ public class GameLogic {
         this.height = height;
         boxesToRemove = new ArrayList<>();
         this.boxes = new ArrayList<>();
-        this.player = new Player(80, 340, 80, 290);
+        this.player = new Player(200, 340, width, height);
         this.tires = new ArrayList<>();
         this.drinks = new ArrayList<>();
         tireSpawner();
+        drinkSpawner();
     }
 
     public void update() {
         player.move();
         tireCollision(new Timer());
+        drinkCollision(new Timer());
         updatePlayer();
         updateBoxes();
         updateTires();
+        updateDrinks();
     }
 
     public void updatePlayer() {
@@ -54,7 +57,7 @@ public class GameLogic {
     public void updateBoxes() {
         boxSpawnTimer++;
         if (boxSpawnTimer >= boxSpawnInterval) {
-            boxes.add(new Box(-100,450, 50,50));
+            boxes.add(new Box(-100,455, 50,50));
             boxSpawnTimer = 0;
         }
         for (Box box : boxes) {
@@ -81,12 +84,12 @@ public class GameLogic {
             }
             box.setX(box.getX() + 2);
         }
-        if (player.getX() == 720 && player.isCarrying()) {
+        if (player.getX() == 710 && player.isCarrying()) {
             player.Score();
             player.setCarrying(false);
         }
         if (player.getScore() > 2 && !tireAdded) {
-            tires.add(new Tire(250, 100));
+            tires.add(new Tire(300, 100));
             tireAdded = true;
         }
         boxes.removeAll(boxesToRemove);
@@ -120,10 +123,59 @@ public class GameLogic {
 
     public void tireSpawner() {
         tires.add(Tire.createTire(width, height));
-        tires.add(Tire.createTire(width, height));
     }
 
     public ArrayList<Tire> getTires() {
         return tires;
+    }
+
+    public void updateDrinks() {
+        ArrayList<Drink> drinksToRemove = new ArrayList<>();
+        for (Drink drink : drinks) {
+            drink.fall();
+            if (drink.getY() >= 720) {
+                drinksToRemove.add(drink);
+            }
+        }
+        drinks.removeAll(drinksToRemove);
+    }
+    public void drinkCollision(Timer timer) {
+        Rectangle playerRectangle = player.getRect();
+        for (Drink drink : drinks) {
+            Rectangle drinkRectangle = drink.getRect();
+            if (playerRectangle.intersects(drinkRectangle)) {
+                drinks.remove(drink);
+                player.setSpeedMultiplier(1.6);
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        player.setSpeedMultiplier(1.0);
+                    }
+                }, 3000);
+                break;
+            }
+        }
+    }
+
+    public void drinkSpawner() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                drinks.add(Drink.createDrink());
+            }
+        }, 0, 7000);
+    }
+
+    public ArrayList<Drink> getDrinks() {
+        return drinks;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

@@ -2,15 +2,12 @@ package org.example.logic;
 
 import org.example.ImageLoader;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class Entity extends Coordinates {
     protected int width;
     protected int height;
     public ImageLoader loader;
-    Random random;
 
     public Entity(int x, int y,int width, int height) {
         super(x,y);
@@ -35,6 +32,6 @@ public class Entity extends Coordinates {
     }
 
     public Rectangle getRect() {
-        return new Rectangle(x,y,width,height);
+        return new Rectangle(x, y, width, height);
     }
 }

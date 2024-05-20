@@ -9,30 +9,31 @@ public class GamePanel extends JPanel implements Runnable {
     int width = 1024;
     int height = 768;
 
-    GamePanel() {
-        setPreferredSize(new Dimension(width, height));
+    public GamePanel() {
+        JFrame frame = new JFrame("CAR PARTS WAREHOUSE");
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(this);
+        frame.setPreferredSize(new Dimension(width, height));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
         logic = new GameLogic(width, height);
         graphics = new GameGraphics(logic);
+        frame.add(graphics);
         Thread thread = new Thread(this);
         thread.start();
         setFocusable(true);
         requestFocus();
-        addKeyListener(logic.player);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        graphics.draw(g);
-        g.setColor(Color.BLACK);
-        g.drawString("score: " + logic.getPlayer().getScore(), getWidth() - 100, 30);
+        addKeyListener(logic.getPlayer());
     }
 
     @Override
     public void run() {
-        while(true) {
+        while (true) {
             logic.update();
-            repaint();
+            graphics.repaint();
             try {
                 Thread.sleep(1000/60);
             }

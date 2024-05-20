@@ -9,30 +9,26 @@ public class Player extends Entity implements KeyListener {
     boolean isCarrying;
     boolean isStunned;
     private int score;
+    private double speedMultiplier;
 
     public Player(int x, int y, int width, int height) {
         super(x, y, width, height);
         score = 0;
     }
 
-    public void setStunned(boolean stunned) {
-        this.isStunned = stunned;
-    }
-
     public void move() {
-        //System.out.println(x);
         if (!isStunned) {
             if (LEFT) {
-                x -= 3;
+                x -= 3 * speedMultiplier;
             }
             if (RIGHT) {
-                x += 3;
+                x += 3 * speedMultiplier;
             }
             if (x <= 200) {
                 x = 200;
             }
-            if (x >= 720) {
-                x = 720;
+            if (x >= 715) {
+                x = 715;
             }
         }
     }
@@ -63,6 +59,7 @@ public class Player extends Entity implements KeyListener {
             RIGHT = false;
         }
     }
+
     public boolean isCarrying() {
         return isCarrying;
     }
@@ -74,7 +71,24 @@ public class Player extends Entity implements KeyListener {
     public void Score() {
         score++;
     }
+
     public int getScore() {
         return score;
+    }
+
+    public boolean isStunned() {
+        return isStunned;
+    }
+
+    public void setStunned(boolean stunned) {
+        this.isStunned = stunned;
+    }
+
+    public void setSpeedMultiplier(double multiplier) {
+        this.speedMultiplier = multiplier;
+    }
+
+    public double getSpeedMultiplier() {
+        return speedMultiplier;
     }
 }
