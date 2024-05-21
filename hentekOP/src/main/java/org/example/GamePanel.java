@@ -4,29 +4,41 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
+    JFrame frame;
     GameLogic logic;
     GameGraphics graphics;
+    GameMenu menu;
     int width = 1024;
     int height = 768;
 
     public GamePanel() {
-        JFrame frame = new JFrame("CAR PARTS WAREHOUSE");
+        frame = new JFrame("CAR PARTS WAREHOUSE");
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(this);
         frame.setPreferredSize(new Dimension(width, height));
+        frame.setLocationRelativeTo(null);
+        logic = new GameLogic(width, height);
+        menu = new GameMenu(this);
+        graphics = new GameGraphics(logic, menu);
+        frame.add(graphics);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        setFocusable(true);
+        requestFocusInWindow();
+    }
 
-        logic = new GameLogic(width, height);
-        graphics = new GameGraphics(logic);
-        frame.add(graphics);
+    public void gamePlay() {
+        graphics.startGame();
         Thread thread = new Thread(this);
         thread.start();
-        setFocusable(true);
-        requestFocus();
-        addKeyListener(logic.getPlayer());
+        graphics.setFocusable(true);
+        graphics.requestFocusInWindow();
+        graphics.addKeyListener(logic.getPlayer());
+    }
+
+    public void gameTutorial() {
+        graphics.startTutorial();
     }
 
     @Override
@@ -35,9 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
             logic.update();
             graphics.repaint();
             try {
-                Thread.sleep(1000/60);
-            }
-            catch (InterruptedException e) {
+                Thread.sleep(1000 / 60);
+            } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }

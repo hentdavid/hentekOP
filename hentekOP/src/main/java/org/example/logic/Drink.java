@@ -18,4 +18,12 @@ public class Drink extends Entity {
     public void fall() {
         y += 2;
     }
+
+    public void move() {
+        if (getY() >= 720) {
+            Random random = new Random();
+            int randomPosition = random.nextInt(3);
+            setX(randomPosition);
+        }
+    }
 }

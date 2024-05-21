@@ -22,9 +22,9 @@ public class Tire extends Entity {
     public void move() {
         if (getY() >= 700) {
             Random random = new Random();
-            int newX = random.nextInt(321) + 320;
+            int newX = random.nextInt(301) + 300;
             setX(newX);
-            setY(-getHeight());
+            setY(80);
         }
         else {
             setY(getY() + 1);

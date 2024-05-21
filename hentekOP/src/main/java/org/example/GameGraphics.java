@@ -10,37 +10,86 @@ import java.awt.*;
 
 public class GameGraphics extends JPanel {
     GameLogic logic;
-    ImageLoader background;
-    ImageLoader menu;
+    ImageLoader gameBackground;
+    ImageLoader menuBackground;
+    ImageLoader tutorialBackground;
+    ImageLoader buttonPlay;
+    JButton playButton;
+    ImageLoader buttonTutorial;
+    JButton tutorialButton;
+    boolean inGame;
+    boolean inTutorial;
 
-    GameGraphics(GameLogic logic) {
+    GameGraphics(GameLogic logic, GameMenu menu) {
         this.logic = logic;
-        background = new ImageLoader("Hentek - BACKGROUND.png");
-        //menu = new ImageLoader("Hentek - MENU.png");
+        this.inGame = false;
+        setLayout(null);
+        setFocusable(true);
+        gameBackground = new ImageLoader("Hentek - BACKGROUND.png");
+        menuBackground = new ImageLoader("Hentek - MENU.png");
+        tutorialBackground = new ImageLoader("Hentek - TUTORIAL.png");
+        buttonPlay = new ImageLoader("Hentek - PLAYBUTTON.png");
+        playButton = menu.getPlayButton();
+        playButton.setIcon(new ImageIcon(buttonPlay.getImage()));
+        playButton.setBounds(620, 200, buttonPlay.getImage().getWidth(null), buttonPlay.getImage().getHeight(null));
+        playButton.setContentAreaFilled(false);
+        playButton.setBorderPainted(false);
+        playButton.addActionListener(e -> startGame());
+        add(playButton);
+        buttonTutorial = new ImageLoader("Hentek - TUTORIALBUTTON.png");
+        tutorialButton = menu.getTutorialButton();
+        tutorialButton.setIcon(new ImageIcon(buttonTutorial.getImage()));
+        tutorialButton.setBounds(620, 350, buttonTutorial.getImage().getWidth(null), buttonTutorial.getImage().getHeight(null));
+        tutorialButton.setContentAreaFilled(false);
+        tutorialButton.setBorderPainted(false);
+        tutorialButton.addActionListener(e -> startTutorial());
+        add(tutorialButton);
+    }
+
+    public void startGame() {
+        inGame = true;
+        inTutorial = false;
+        playButton.setVisible(false);
+        tutorialButton.setVisible(false);
+    }
+
+    public void startTutorial() {
+        inTutorial = true;
+        inGame = false;
+        tutorialButton.setVisible(false);
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(background.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
+        if (inGame) {
+            g.drawImage(gameBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
 
-        Player player = logic.getPlayer();
-        drawPlayer(g, player);
+            Player player = logic.getPlayer();
+            drawPlayer(g, player);
 
-        for (Box box : logic.getBoxes()) {
-            drawBox(g, box);
+            for (Box box : logic.getBoxes()) {
+                drawBox(g, box);
+            }
+
+            for (Tire tire : logic.getTires()) {
+                drawTire(g, tire);
+            }
+
+            for (Drink drink : logic.getDrinks()) {
+                drawDrink(g, drink);
+            }
+
+            g.setColor(Color.BLACK);
+            g.drawString("score: " + logic.getPlayer().getScore(), logic.getWidth() - 100, 280);
         }
-
-        for (Tire tire : logic.getTires()) {
-            drawTire(g, tire);
+        else if (inTutorial) {
+            g.drawImage(tutorialBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
         }
-
-        for (Drink drink : logic.getDrinks()) {
-            drawDrink(g, drink);
+        else {
+            g.drawImage(menuBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
         }
-
-        g.setColor(Color.BLACK);
-        g.drawString("score: " + logic.getPlayer().getScore(), logic.getWidth() - 100, 280);
     }
 
     private void drawPlayer(Graphics g, Player player) {
@@ -66,21 +115,21 @@ public class GameGraphics extends JPanel {
     }
 
     private void drawBox(Graphics g, Box box) {
-            if (box.isBroken) {
-                box.loader = new ImageLoader("Hentek - BROKENBOX.png");
-                box.setWidth(85);
-                box.setHeight(53);
-            } else {
-                box.loader = new ImageLoader("Hentek - BOX.png");
-                box.setWidth(45);
-                box.setHeight(45);
-            }
-            g.drawImage(box.loader.getImage(), box.getX(), box.getY(), box.getWidth(), box.getHeight(), null);
+        if (box.isBroken) {
+            box.loader = new ImageLoader("Hentek - BROKENBOX.png");
+            box.setWidth(85);
+            box.setHeight(53);
+        } else {
+            box.loader = new ImageLoader("Hentek - BOX.png");
+            box.setWidth(45);
+            box.setHeight(45);
         }
+        g.drawImage(box.loader.getImage(), box.getX(), box.getY(), box.getWidth(), box.getHeight(), null);
+    }
 
     private void drawTire(Graphics g, Tire tire) {
-            tire.loader = new ImageLoader("Hentek - TIRE.png");
-            g.drawImage(tire.loader.getImage(), tire.getX(), tire.getY(), tire.getWidth(), tire.getHeight(), null);
+        tire.loader = new ImageLoader("Hentek - TIRE.png");
+        g.drawImage(tire.loader.getImage(), tire.getX(), tire.getY(), tire.getWidth(), tire.getHeight(), null);
     }
 
     private void drawDrink(Graphics g, Drink drink) {

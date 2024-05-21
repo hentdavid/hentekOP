@@ -88,7 +88,7 @@ public class GameLogic {
             player.Score();
             player.setCarrying(false);
         }
-        if (player.getScore() > 2 && !tireAdded) {
+        if (player.getScore() > 3 && !tireAdded) {
             tires.add(new Tire(300, 100));
             tireAdded = true;
         }
@@ -133,19 +133,18 @@ public class GameLogic {
         ArrayList<Drink> drinksToRemove = new ArrayList<>();
         for (Drink drink : drinks) {
             drink.fall();
-            if (drink.getY() >= 720) {
-                drinksToRemove.add(drink);
-            }
+            drink.move();
         }
         drinks.removeAll(drinksToRemove);
     }
+
     public void drinkCollision(Timer timer) {
         Rectangle playerRectangle = player.getRect();
         for (Drink drink : drinks) {
             Rectangle drinkRectangle = drink.getRect();
             if (playerRectangle.intersects(drinkRectangle)) {
                 drinks.remove(drink);
-                player.setSpeedMultiplier(1.6);
+                player.setSpeedMultiplier(1.5);
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {

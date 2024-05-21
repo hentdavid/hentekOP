@@ -27,8 +27,8 @@ public class Player extends Entity implements KeyListener {
             if (x <= 200) {
                 x = 200;
             }
-            if (x >= 715) {
-                x = 715;
+            if (x >= 720) {
+                x = 720;
             }
         }
     }
