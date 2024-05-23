@@ -13,11 +13,15 @@ public class GameLogic {
     private ArrayList<Box> boxes;
     private ArrayList<Box> boxesToRemove;
     private ArrayList<Tire> tires;
-    private final ArrayList<Drink> drinks;
+    private ArrayList<Drink> drinks;
+    private Oil oil;
     boolean canCarry;
     int boxSpawnTimer = 100;
     int boxSpawnInterval = 180;
     private boolean tireAdded = false;
+    private boolean oilAdded = false;
+    private int oilUpdateCounter = 0;
+    private Timer oilSpawnTimer;
 
     public GameLogic(int width, int height) {
         this.width = width;
@@ -35,10 +39,12 @@ public class GameLogic {
         player.move();
         tireCollision(new Timer());
         drinkCollision(new Timer());
+        oilCollision(new Timer());
         updatePlayer();
         updateBoxes();
         updateTires();
         updateDrinks();
+        updateOil();
     }
 
     public void updatePlayer() {
@@ -69,7 +75,6 @@ public class GameLogic {
             else if (box.getX() > 150 && !getPlayer().isCarrying() && !box.isBroken) {
                 player.setCarrying(true);
                 boxesToRemove.add(box);
-
             }
             else if (box.getX() > 150 && getPlayer().isCarrying()) {
                 box.isBroken = true;
@@ -84,13 +89,17 @@ public class GameLogic {
             }
             box.setX(box.getX() + 2);
         }
-        if (player.getX() == 710 && player.isCarrying()) {
+        if (player.getX() == 720 && player.isCarrying()) {
             player.Score();
             player.setCarrying(false);
         }
         if (player.getScore() > 3 && !tireAdded) {
             tires.add(new Tire(300, 100));
             tireAdded = true;
+        }
+        if (player.getScore() > 6 && !oilAdded) {
+            oilSpawner();
+            oilAdded = true;
         }
         boxes.removeAll(boxesToRemove);
     }
@@ -168,6 +177,47 @@ public class GameLogic {
 
     public ArrayList<Drink> getDrinks() {
         return drinks;
+    }
+
+    public void updateOil() {
+        oilUpdateCounter++;
+        if (oilUpdateCounter >= 600) {
+            oilUpdateCounter = 0;
+        }
+    }
+
+    public void oilCollision(Timer timer) {
+        if (oil == null) {
+            return;
+        }
+        Rectangle playerRectangle = player.getRect();
+        Rectangle oilRectangle = oil.getRect();
+        if (playerRectangle.intersects(oilRectangle)) {
+            player.setSpeedMultiplier(0.5);
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    player.setSpeedMultiplier(1.0);
+                }
+            }, 2500);
+        }
+    }
+
+    public void oilSpawner() {
+        if (oilSpawnTimer != null) {
+            oilSpawnTimer.cancel();
+        }
+        oilSpawnTimer = new Timer();
+        oilSpawnTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run () {
+                oil = Oil.createOil(width, height);
+            }
+        }, 0, 5000);
+    }
+
+    public Oil getOil() {
+        return oil;
     }
 
     public int getWidth() {

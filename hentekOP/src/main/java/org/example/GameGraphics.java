@@ -1,9 +1,7 @@
 package org.example;
 
+import org.example.logic.*;
 import org.example.logic.Box;
-import org.example.logic.Drink;
-import org.example.logic.Player;
-import org.example.logic.Tire;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,18 +26,22 @@ public class GameGraphics extends JPanel {
         gameBackground = new ImageLoader("Hentek - BACKGROUND.png");
         menuBackground = new ImageLoader("Hentek - MENU.png");
         tutorialBackground = new ImageLoader("Hentek - TUTORIAL.png");
+
         buttonPlay = new ImageLoader("Hentek - PLAYBUTTON.png");
         playButton = menu.getPlayButton();
         playButton.setIcon(new ImageIcon(buttonPlay.getImage()));
         playButton.setBounds(620, 200, buttonPlay.getImage().getWidth(null), buttonPlay.getImage().getHeight(null));
+        playButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         playButton.setContentAreaFilled(false);
         playButton.setBorderPainted(false);
         playButton.addActionListener(e -> startGame());
         add(playButton);
+
         buttonTutorial = new ImageLoader("Hentek - TUTORIALBUTTON.png");
         tutorialButton = menu.getTutorialButton();
         tutorialButton.setIcon(new ImageIcon(buttonTutorial.getImage()));
         tutorialButton.setBounds(620, 350, buttonTutorial.getImage().getWidth(null), buttonTutorial.getImage().getHeight(null));
+        tutorialButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         tutorialButton.setContentAreaFilled(false);
         tutorialButton.setBorderPainted(false);
         tutorialButton.addActionListener(e -> startTutorial());
@@ -73,12 +75,17 @@ public class GameGraphics extends JPanel {
                 drawBox(g, box);
             }
 
+            for (Drink drink : logic.getDrinks()) {
+                drawDrink(g, drink);
+            }
+
             for (Tire tire : logic.getTires()) {
                 drawTire(g, tire);
             }
 
-            for (Drink drink : logic.getDrinks()) {
-                drawDrink(g, drink);
+            Oil oil = logic.getOil();
+            if (oil != null) {
+                drawOil(g, oil);
             }
 
             g.setColor(Color.BLACK);
@@ -135,5 +142,10 @@ public class GameGraphics extends JPanel {
     private void drawDrink(Graphics g, Drink drink) {
         drink.loader = new ImageLoader("Hentek - SMALLERDRINK.png");
         g.drawImage(drink.loader.getImage(), drink.getX(), drink.getY(), drink.getWidth(), drink.getHeight(), null);
+    }
+
+    private void drawOil(Graphics g, Oil oil) {
+        oil.loader = new ImageLoader("Hentek - OIL.png");
+        g.drawImage(oil.loader.getImage(), oil.getX(), oil.getY(), oil.getWidth(), oil.getHeight(), null);
     }
 }
