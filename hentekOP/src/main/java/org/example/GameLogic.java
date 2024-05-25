@@ -3,10 +3,12 @@ package org.example;
 import org.example.logic.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameLogic {
+public class GameLogic implements KeyListener {
     Player player;
     public final int width;
     public final int height;
@@ -22,10 +24,12 @@ public class GameLogic {
     private boolean oilAdded = false;
     private int oilUpdateCounter = 0;
     private Timer oilSpawnTimer;
+    private GamePanel gamePanel;
 
-    public GameLogic(int width, int height) {
+    public GameLogic(int width, int height, GamePanel gamePanel) {
         this.width = width;
         this.height = height;
+        this.gamePanel = gamePanel;
         boxesToRemove = new ArrayList<>();
         this.boxes = new ArrayList<>();
         this.player = new Player(200, 340, width, height);
@@ -53,6 +57,18 @@ public class GameLogic {
         }
         else {
             canCarry = true;
+        }
+
+        if (player.getScore() == 3 && !tireAdded) {
+            tires.add(new Tire(300, 100));
+            tireAdded = true;
+        }
+        if (player.getScore() == 6 && !oilAdded) {
+            oilSpawner();
+            oilAdded = true;
+        }
+        if (player.getScore() == 10) {
+            gamePanel.gameEnd();
         }
     }
 
@@ -92,14 +108,6 @@ public class GameLogic {
         if (player.getX() == 720 && player.isCarrying()) {
             player.Score();
             player.setCarrying(false);
-        }
-        if (player.getScore() > 3 && !tireAdded) {
-            tires.add(new Tire(300, 100));
-            tireAdded = true;
-        }
-        if (player.getScore() > 6 && !oilAdded) {
-            oilSpawner();
-            oilAdded = true;
         }
         boxes.removeAll(boxesToRemove);
     }
@@ -226,5 +234,25 @@ public class GameLogic {
 
     public int getHeight() {
         return height;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if (key == KeyEvent.VK_ESCAPE) {
+            gamePanel.gameEnd();
+            gamePanel.frame.setVisible(false);
+            gamePanel.menu.setVisible(true);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

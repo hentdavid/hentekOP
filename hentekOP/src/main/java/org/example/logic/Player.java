@@ -41,10 +41,10 @@ public class Player extends Entity implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keys = e.getKeyCode();
-        if(keys == KeyEvent.VK_A) {
+        if (keys == KeyEvent.VK_A) {
             LEFT = true;
         }
-        if(keys == KeyEvent.VK_D) {
+        if (keys == KeyEvent.VK_D) {
             RIGHT = true;
         }
     }
@@ -52,10 +52,10 @@ public class Player extends Entity implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         int keys = e.getKeyCode();
-        if(keys == KeyEvent.VK_A) {
+        if (keys == KeyEvent.VK_A) {
             LEFT = false;
         }
-        if(keys == KeyEvent.VK_D) {
+        if (keys == KeyEvent.VK_D) {
             RIGHT = false;
         }
     }

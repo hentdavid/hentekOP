@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(width, height));
         frame.setLocationRelativeTo(null);
-        logic = new GameLogic(width, height);
+        logic = new GameLogic(width, height, this);
         menu = new GameMenu(this);
         graphics = new GameGraphics(logic, menu);
         frame.add(graphics);
@@ -26,6 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
         frame.setVisible(true);
         setFocusable(true);
         requestFocusInWindow();
+        graphics.addKeyListener(logic);
     }
 
     public void gamePlay() {
@@ -39,6 +40,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void gameTutorial() {
         graphics.startTutorial();
+    }
+
+    public void gameEnd() {
+        graphics.endGame();
+        removeAll();
+        menu.setVisible(true);
     }
 
     @Override

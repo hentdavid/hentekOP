@@ -5,10 +5,8 @@ import javax.swing.*;
 public class GameMenu extends JPanel {
     private JButton playButton;
     private JButton tutorialButton;
-    private GamePanel gamePanel;
 
     public GameMenu(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
         playButton = new JButton();
         playButton.setOpaque(false);
         playButton.setContentAreaFilled(false);

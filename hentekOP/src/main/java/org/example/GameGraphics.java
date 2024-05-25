@@ -2,7 +2,6 @@ package org.example;
 
 import org.example.logic.*;
 import org.example.logic.Box;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,12 +10,14 @@ public class GameGraphics extends JPanel {
     ImageLoader gameBackground;
     ImageLoader menuBackground;
     ImageLoader tutorialBackground;
+    ImageLoader gameOverBackground;
     ImageLoader buttonPlay;
     JButton playButton;
     ImageLoader buttonTutorial;
     JButton tutorialButton;
     boolean inGame;
     boolean inTutorial;
+    boolean gameOver;
 
     GameGraphics(GameLogic logic, GameMenu menu) {
         this.logic = logic;
@@ -26,6 +27,7 @@ public class GameGraphics extends JPanel {
         gameBackground = new ImageLoader("Hentek - BACKGROUND.png");
         menuBackground = new ImageLoader("Hentek - MENU.png");
         tutorialBackground = new ImageLoader("Hentek - TUTORIAL.png");
+        gameOverBackground = new ImageLoader("Hentek - GAMEOVER.png");
 
         buttonPlay = new ImageLoader("Hentek - PLAYBUTTON.png");
         playButton = menu.getPlayButton();
@@ -51,14 +53,25 @@ public class GameGraphics extends JPanel {
     public void startGame() {
         inGame = true;
         inTutorial = false;
+        gameOver = false;
         playButton.setVisible(false);
         tutorialButton.setVisible(false);
+        setFocusable(true);
+        requestFocusInWindow();
     }
 
     public void startTutorial() {
         inTutorial = true;
         inGame = false;
+        gameOver = false;
         tutorialButton.setVisible(false);
+        repaint();
+    }
+
+    public void endGame() {
+        gameOver = true;
+        inGame = false;
+        inTutorial = false;
         repaint();
     }
 
@@ -93,6 +106,9 @@ public class GameGraphics extends JPanel {
         }
         else if (inTutorial) {
             g.drawImage(tutorialBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
+        }
+        else if (gameOver) {
+            g.drawImage(gameOverBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
         }
         else {
             g.drawImage(menuBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
