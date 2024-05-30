@@ -25,6 +25,8 @@ public class GameLogic implements KeyListener {
     private int oilUpdateCounter = 0;
     private Timer oilSpawnTimer;
     private GamePanel gamePanel;
+    private Timer gameTimer;
+    private int timeRemaining;
 
     public GameLogic(int width, int height, GamePanel gamePanel) {
         this.width = width;
@@ -35,8 +37,24 @@ public class GameLogic implements KeyListener {
         this.player = new Player(200, 340, width, height);
         this.tires = new ArrayList<>();
         this.drinks = new ArrayList<>();
+        this.timeRemaining = 200;
         tireSpawner();
         drinkSpawner();
+        startGameTimer();
+    }
+
+    private void startGameTimer() {
+        gameTimer = new Timer();
+        gameTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                timeRemaining--;
+                if (timeRemaining <= 0) {
+                    gamePanel.gameEndNoTime();
+                    gameTimer.cancel();
+                }
+            }
+        }, 1000, 1000);
     }
 
     public void update() {
@@ -236,6 +254,10 @@ public class GameLogic implements KeyListener {
         return height;
     }
 
+    public int getTimeRemaining() {
+        return timeRemaining;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -245,9 +267,7 @@ public class GameLogic implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ESCAPE) {
-            gamePanel.gameEnd();
-            gamePanel.frame.setVisible(false);
-            gamePanel.menu.setVisible(true);
+            System.exit(0);
         }
     }
 

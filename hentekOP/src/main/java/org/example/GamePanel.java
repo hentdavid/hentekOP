@@ -44,13 +44,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void gameEnd() {
         graphics.endGame();
-        removeAll();
-        menu.setVisible(true);
+    }
+
+    public void gameEndNoTime() {
+        graphics.endGameNoTime();
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (graphics.inGame) {
             logic.update();
             graphics.repaint();
             try {

@@ -87,8 +87,4 @@ public class Player extends Entity implements KeyListener {
     public void setSpeedMultiplier(double multiplier) {
         this.speedMultiplier = multiplier;
     }
-
-    public double getSpeedMultiplier() {
-        return speedMultiplier;
-    }
 }

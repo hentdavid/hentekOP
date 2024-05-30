@@ -11,6 +11,7 @@ public class GameGraphics extends JPanel {
     ImageLoader menuBackground;
     ImageLoader tutorialBackground;
     ImageLoader gameOverBackground;
+    ImageLoader gameOverNoTimeBackground;
     ImageLoader buttonPlay;
     JButton playButton;
     ImageLoader buttonTutorial;
@@ -18,6 +19,7 @@ public class GameGraphics extends JPanel {
     boolean inGame;
     boolean inTutorial;
     boolean gameOver;
+    boolean gameOverNoTime;
 
     GameGraphics(GameLogic logic, GameMenu menu) {
         this.logic = logic;
@@ -28,6 +30,7 @@ public class GameGraphics extends JPanel {
         menuBackground = new ImageLoader("Hentek - MENU.png");
         tutorialBackground = new ImageLoader("Hentek - TUTORIAL.png");
         gameOverBackground = new ImageLoader("Hentek - GAMEOVER.png");
+        gameOverNoTimeBackground = new ImageLoader("Hentek - GAMEOVERNOTIME.png");
 
         buttonPlay = new ImageLoader("Hentek - PLAYBUTTON.png");
         playButton = menu.getPlayButton();
@@ -54,6 +57,7 @@ public class GameGraphics extends JPanel {
         inGame = true;
         inTutorial = false;
         gameOver = false;
+        gameOverNoTime = false;
         playButton.setVisible(false);
         tutorialButton.setVisible(false);
         setFocusable(true);
@@ -64,14 +68,25 @@ public class GameGraphics extends JPanel {
         inTutorial = true;
         inGame = false;
         gameOver = false;
+        gameOverNoTime = false;
         tutorialButton.setVisible(false);
         repaint();
+
     }
 
     public void endGame() {
         gameOver = true;
         inGame = false;
         inTutorial = false;
+        gameOverNoTime = false;
+        repaint();
+    }
+
+    public void endGameNoTime() {
+        gameOverNoTime = true;
+        inGame = false;
+        inTutorial = false;
+        gameOver = false;
         repaint();
     }
 
@@ -103,12 +118,16 @@ public class GameGraphics extends JPanel {
 
             g.setColor(Color.BLACK);
             g.drawString("score: " + logic.getPlayer().getScore(), logic.getWidth() - 100, 280);
+            g.drawString("time remaining: " + logic.getTimeRemaining(), logic.getWidth() - 250, 280);
         }
         else if (inTutorial) {
             g.drawImage(tutorialBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
         }
         else if (gameOver) {
             g.drawImage(gameOverBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
+        }
+        else if (gameOverNoTime) {
+            g.drawImage(gameOverNoTimeBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
         }
         else {
             g.drawImage(menuBackground.getImage(), 0, 0, logic.getWidth(), logic.getHeight(), null);
