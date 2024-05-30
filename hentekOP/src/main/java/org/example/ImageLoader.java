@@ -2,7 +2,6 @@ package org.example;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class ImageLoader {
@@ -10,7 +9,7 @@ public class ImageLoader {
 
     public ImageLoader(String file) {
         try {
-            image = ImageIO.read(new File("src/main/resources/" + file));
+            image = ImageIO.read(getClass().getResource("/" + file));
         }
         catch (IOException e) {
             throw new RuntimeException(e);
